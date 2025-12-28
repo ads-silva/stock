@@ -1,14 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
-
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.getClaims();
-
-  if (error || !data?.claims) {
-    redirect("/login");
-  }
-
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <div className="grid auto-rows-min gap-4 md:grid-cols-3">

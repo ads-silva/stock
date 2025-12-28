@@ -32,12 +32,12 @@ const data = {
       icon: LayoutDashboard,
     },
     {
-      name: "New Request",
+      name: "New Reservation",
       url: "#",
       icon: FilePlus2,
     },
     {
-      name: "Requests",
+      name: "Reservations",
       url: "#",
       icon: LayoutList,
     },

@@ -20,10 +20,10 @@ CREATE TABLE "public"."reservation" (
     "status" VARCHAR(50) NOT NULL DEFAULT 'pending' CHECK ("status" IN ('pending', 'available', 'rejected', 'completed')),
     "reason" VARCHAR(255),
     "managerComment" VARCHAR(255) DEFAULT '',
-    "managerUserId" UUID,
-    "requestUserId" UUID NOT NULL,
-    "createdUserId" UUID NOT NULL,
-    "updatedUserId" UUID,
+    "managerUserId" BIGINT REFERENCES "public"."users"("id") ON DELETE CASCADE,
+    "requestUserId" BIGINT NOT NULL REFERENCES "public"."users"("id") ON DELETE CASCADE,
+    "createdUserId" BIGINT NOT NULL REFERENCES "public"."users"("id") ON DELETE CASCADE,
+    "updatedUserId" BIGINT REFERENCES "public"."users"("id") ON DELETE CASCADE,
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
@@ -48,6 +48,9 @@ ALTER TABLE "public"."product" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "public"."reservation" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "public"."reservation_product" ENABLE ROW LEVEL SECURITY;
 
-
+-- Create policies
+CREATE POLICY "allow all users to do all actions on products" ON "public"."product" FOR ALL USING (true);
+CREATE POLICY "allow all users to do all actions on reservations" ON "public"."reservation" FOR ALL USING (true);
+CREATE POLICY "allow all users to do all actions on reservation products" ON "public"."reservation_product" FOR ALL USING (true);
 
 
