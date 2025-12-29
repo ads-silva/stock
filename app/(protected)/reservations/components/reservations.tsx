@@ -46,7 +46,6 @@ export default function Reservations() {
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">ID</TableHead>
-          <TableHead>PIN</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Requested By</TableHead>
           <TableHead>Manager</TableHead>
@@ -68,7 +67,6 @@ export default function Reservations() {
           reservations.map((reservation) => (
             <TableRow key={reservation.id}>
               <TableCell className="font-medium">{reservation.id}</TableCell>
-              <TableCell>{reservation.pin}</TableCell>
               <TableCell>
                 <Badge variant={getStatusVariant(reservation.status)}>
                   {reservation.status}

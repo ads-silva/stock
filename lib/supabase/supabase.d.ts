@@ -76,7 +76,6 @@ export type Database = {
           id: number
           managerComment: string | null
           managerUserId: number
-          pin: number
           reason: string | null
           requestUserId: number
           status: string
@@ -89,7 +88,6 @@ export type Database = {
           id?: number
           managerComment?: string | null
           managerUserId: number
-          pin: number
           reason?: string | null
           requestUserId: number
           status?: string
@@ -102,7 +100,6 @@ export type Database = {
           id?: number
           managerComment?: string | null
           managerUserId?: number
-          pin?: number
           reason?: string | null
           requestUserId?: number
           status?: string

@@ -16,7 +16,6 @@ CREATE TABLE "public"."product" (
 -- Tabela de pedidos de reserva
 CREATE TABLE "public"."reservation" (
     "id" BIGSERIAL PRIMARY KEY,
-    "pin" INTEGER NOT NULL,
     "status" VARCHAR(50) NOT NULL DEFAULT 'pending' CHECK ("status" IN ('pending', 'available', 'rejected', 'completed')),
     "reason" VARCHAR(255),
     "managerComment" VARCHAR(255) DEFAULT '',

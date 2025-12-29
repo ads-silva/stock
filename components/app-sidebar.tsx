@@ -28,17 +28,17 @@ const data = {
   navMain: [
     {
       name: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: LayoutDashboard,
     },
     {
       name: "New Reservation",
-      url: "#",
+      url: "/new-reservation",
       icon: FilePlus2,
     },
     {
       name: "Reservations",
-      url: "#",
+      url: "/reservations",
       icon: LayoutList,
     },
   ],
