@@ -2,11 +2,11 @@
 import { Database } from "@/lib/supabase/supabase";
 import { User } from "./user";
 
-type ReservationRowType = Database["public"]["Tables"]["reservation"]["Row"];
-type ReservationInsertType = Database["public"]["Tables"]["reservation"]["Insert"];
+type ReservationRowType = Database["public"]["Tables"]["reservations"]["Row"];
+type ReservationInsertType = Database["public"]["Tables"]["reservations"]["Insert"];
 
 export interface Reservation extends ReservationRowType {
-  requestUser: User;
+  requesterUser: User;
   managerUser: User;
 }
 

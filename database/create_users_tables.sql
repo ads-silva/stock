@@ -3,9 +3,9 @@ CREATE ROLE reservation_manager INHERIT;
 GRANT authenticated TO reservation_manager;
 GRANT reservation_manager TO authenticator;
 
-CREATE ROLE reservation_request INHERIT;
-GRANT authenticated TO reservation_request;
-GRANT reservation_request TO authenticator;
+CREATE ROLE reservation_requester INHERIT;
+GRANT authenticated TO reservation_requester;
+GRANT reservation_requester TO authenticator;
 
 create or replace function make_user_reservation_manager(user_email text)
 returns void
@@ -16,18 +16,18 @@ begin
 end;
 $$;
 
-create or replace function make_user_reservation_request(user_email text)
+create or replace function make_user_reservation_requester(user_email text)
 returns void
 language plpgsql
 as $$
 begin
-    UPDATE auth.users SET role = 'reservation_request' WHERE email = user_email;
+    UPDATE auth.users SET role = 'reservation_requester' WHERE email = user_email;
 end;
 $$;
 
-REVOKE ALL ON FUNCTION public.make_user_reservation_request(text) FROM PUBLIC;
-GRANT EXECUTE ON FUNCTION public.make_user_reservation_request(text) TO service_role;
-GRANT EXECUTE ON FUNCTION public.make_user_reservation_request(text) TO dashboard_user;
+REVOKE ALL ON FUNCTION public.make_user_reservation_requester(text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.make_user_reservation_requester(text) TO service_role;
+GRANT EXECUTE ON FUNCTION public.make_user_reservation_requester(text) TO dashboard_user;
 
 REVOKE ALL ON FUNCTION public.make_user_reservation_manager(text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.make_user_reservation_manager(text) TO service_role;
@@ -36,7 +36,7 @@ GRANT EXECUTE ON FUNCTION public.make_user_reservation_manager(text) TO dashboar
 
 -- Depois de criar o usuário, executar as seguintes linhas para tornar o usuário um gerente de reserva ou um solicitante de reserva
 -- select public.make_user_reservation_manager('manager@mail.com');
--- select public.make_user_reservation_request('request@mail.com');
+-- select public.make_user_reservation_request('requester@mail.com');
 
 -- select email, role from auth.users
 
@@ -48,7 +48,7 @@ CREATE TABLE "public"."users" (
     "name" VARCHAR(255) NOT NULL,
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    "userId" UUID NOT NULL UNIQUE,
+    "userId" UUID UNIQUE,
     "role" VARCHAR(50) NOT NULL
 );
 
@@ -58,12 +58,12 @@ CREATE INDEX idx_users_email ON "public"."users"("email");
 alter table "public"."users" enable row level security;
 
 revoke all on table "public"."users" from public, anon;
-grant select on table "public"."users" to reservation_manager, reservation_request;
+grant select on table "public"."users" to reservation_manager, reservation_requester;
 
 
 create policy "allow all users to read users" on "public"."users" for select using (true);
 
 
 insert into "public"."users" ("email", "name", "role") values ('manager@mail.com', 'Manager', 'reservation_manager');
-insert into "public"."users" ("email", "name", "role") values ('request@mail.com', 'Request', 'reservation_request');
+insert into "public"."users" ("email", "name", "role") values ('requester@mail.com', 'requester', 'reservation_requester');
 

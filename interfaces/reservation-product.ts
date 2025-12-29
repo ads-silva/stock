@@ -3,11 +3,11 @@ import { Database } from "@/lib/supabase/supabase";
 import { Product } from "./product";
 import { Reservation } from "./reservation";
 
-type ReservationProductRowType = Database["public"]["Tables"]["reservation_product"]["Row"];
-type ReservationProductInsertType = Database["public"]["Tables"]["reservation_product"]["Insert"];
+type ReservationProductRowType = Database["public"]["Tables"]["reservations_products"]["Row"];
+type ReservationProductInsertType = Database["public"]["Tables"]["reservations_products"]["Insert"];
 
 export interface ReservationProduct extends ReservationProductRowType {
-  product: Product[];
+  products: Product[];
   reservation: Reservation;
 }
 

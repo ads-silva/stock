@@ -12,24 +12,10 @@ import {
 } from "@/components/ui/table";
 import { Reservation } from "@/interfaces/reservation";
 import { getAllReservationsWithUsers } from "@/repository/reservation-repository";
+import { getStatusVariant } from "@/utils/reservations-utils";
 import { useEffect, useState } from "react";
 
-/**
- * Determines the badge variant based on reservation status
- */
-function getStatusVariant(
-  status: string
-): "default" | "secondary" | "destructive" {
-  if (status === "rejected") {
-    return "destructive";
-  }
-  if (status === "completed" || status === "available") {
-    return "default";
-  }
-  return "secondary";
-}
-
-export default function Reservations() {
+export default function ManagerReservations() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
 
   useEffect(() => {
@@ -49,7 +35,6 @@ export default function Reservations() {
           <TableHead>Status</TableHead>
           <TableHead>Requested By</TableHead>
           <TableHead>Manager</TableHead>
-          <TableHead>Reason</TableHead>
           <TableHead>Created At</TableHead>
         </TableRow>
       </TableHeader>
@@ -72,9 +57,8 @@ export default function Reservations() {
                   {reservation.status}
                 </Badge>
               </TableCell>
-              <TableCell>{reservation.requestUser.name}</TableCell>
+              <TableCell>{reservation.requesterUser.name}</TableCell>
               <TableCell>{reservation.managerUser?.name || "-"}</TableCell>
-              <TableCell>{reservation.reason || "-"}</TableCell>
               <TableCell>
                 {new Date(reservation.createdAt).toLocaleDateString()}
               </TableCell>

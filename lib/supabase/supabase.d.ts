@@ -39,7 +39,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      product: {
+      products: {
         Row: {
           amount: number | null
           createdAt: string
@@ -69,15 +69,14 @@ export type Database = {
         }
         Relationships: []
       }
-      reservation: {
+      reservations: {
         Row: {
           createdAt: string
           createdUserId: number
           id: number
           managerComment: string | null
-          managerUserId: number
-          reason: string | null
-          requestUserId: number
+          managerUserId: number | null
+          requesterUserId: number
           status: string
           updatedAt: string
           updatedUserId: number | null
@@ -87,9 +86,8 @@ export type Database = {
           createdUserId: number
           id?: number
           managerComment?: string | null
-          managerUserId: number
-          reason?: string | null
-          requestUserId: number
+          managerUserId?: number | null
+          requesterUserId: number
           status?: string
           updatedAt?: string
           updatedUserId?: number | null
@@ -99,37 +97,36 @@ export type Database = {
           createdUserId?: number
           id?: number
           managerComment?: string | null
-          managerUserId?: number
-          reason?: string | null
-          requestUserId?: number
+          managerUserId?: number | null
+          requesterUserId?: number
           status?: string
           updatedAt?: string
           updatedUserId?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "reservation_createdUserId_fkey"
+            foreignKeyName: "reservations_createdUserId_fkey"
             columns: ["createdUserId"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "reservation_managerUserId_fkey"
+            foreignKeyName: "reservations_managerUserId_fkey"
             columns: ["managerUserId"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "reservation_requestUserId_fkey"
-            columns: ["requestUserId"]
+            foreignKeyName: "reservations_requesterUserId_fkey"
+            columns: ["requesterUserId"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "reservation_updatedUserId_fkey"
+            foreignKeyName: "reservations_updatedUserId_fkey"
             columns: ["updatedUserId"]
             isOneToOne: false
             referencedRelation: "users"
@@ -137,7 +134,7 @@ export type Database = {
           },
         ]
       }
-      reservation_product: {
+      reservations_products: {
         Row: {
           amount: number | null
           createdAt: string
@@ -164,17 +161,17 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "reservation_product_productId_fkey"
+            foreignKeyName: "reservations_products_productId_fkey"
             columns: ["productId"]
             isOneToOne: false
-            referencedRelation: "product"
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "reservation_product_reservationId_fkey"
+            foreignKeyName: "reservations_products_reservationId_fkey"
             columns: ["reservationId"]
             isOneToOne: false
-            referencedRelation: "reservation"
+            referencedRelation: "reservations"
             referencedColumns: ["id"]
           },
         ]
@@ -187,6 +184,7 @@ export type Database = {
           name: string
           role: string
           updatedAt: string
+          userId: string | null
         }
         Insert: {
           createdAt?: string
@@ -195,6 +193,7 @@ export type Database = {
           name: string
           role: string
           updatedAt?: string
+          userId?: string | null
         }
         Update: {
           createdAt?: string
@@ -203,6 +202,7 @@ export type Database = {
           name?: string
           role?: string
           updatedAt?: string
+          userId?: string | null
         }
         Relationships: []
       }
@@ -215,7 +215,7 @@ export type Database = {
         Args: { user_email: string }
         Returns: undefined
       }
-      make_user_reservation_request: {
+      make_user_reservation_requester: {
         Args: { user_email: string }
         Returns: undefined
       }

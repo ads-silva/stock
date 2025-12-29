@@ -2,7 +2,7 @@
 -- SCRIPT 2: POPULAR DADOS DOS PRODUTOS
 -- =====================================================
 
-INSERT INTO "public"."product" ("name", "description", "price", "amount", "createdAt", "updatedAt") VALUES
+INSERT INTO "public"."products" ("name", "description", "price", "amount", "createdAt", "updatedAt") VALUES
 ('notebook', 'large notebook', 5.50, 130, '2024-12-26T14:53:56.000Z', '2024-12-26T14:53:56.000Z'),
 ('glue stick', 'large glue stick', 2.20, 125, '2024-12-26T14:53:56.000Z', '2024-12-26T14:53:56.000Z'),
 ('paper clips', 'pack of paper clips', 0.75, 50, '2024-12-26T14:53:56.000Z', '2024-12-26T14:53:56.000Z'),
