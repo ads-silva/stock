@@ -30,7 +30,7 @@ const allNavItems = [
     name: "Dashboard",
     url: "/dashboard",
     icon: LayoutDashboard,
-    roles: ["reservation_requester", "reservation_manager"],
+    roles: ["reservation_manager"],
   },
   {
     name: "New Reservation",

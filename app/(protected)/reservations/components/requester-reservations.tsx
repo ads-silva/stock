@@ -18,7 +18,7 @@ import {
   ReservationWithItemCount,
 } from "@/repository/reservation-repository";
 import { getCurrentUser } from "@/repository/users-repository";
-import { getStatusVariant } from "@/utils/reservations-utils";
+import { getStatusClasses, getStatusLabel } from "@/utils/reservations-utils";
 
 export default function RequesterReservations() {
   const router = useRouter();
@@ -68,12 +68,15 @@ export default function RequesterReservations() {
             <TableRow key={reservation.id}>
               <TableCell className="font-medium">{reservation.id}</TableCell>
               <TableCell>
-                <Badge variant={getStatusVariant(reservation.status)}>
-                  {reservation.status}
+                <Badge
+                  variant="outline"
+                  className={getStatusClasses(reservation.status)}
+                >
+                  {getStatusLabel(reservation.status)}
                 </Badge>
               </TableCell>
               <TableCell className="text-right">
-                {reservation.totalQuantity}
+                {reservation.itemsCount}
               </TableCell>
               <TableCell>{reservation.managerUser?.name || "-"}</TableCell>
               <TableCell>

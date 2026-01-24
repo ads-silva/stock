@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ReservationWithProducts } from "@/repository/reservation-repository";
-import { getStatusVariant } from "@/utils/reservations-utils";
+import { getStatusClasses, getStatusLabel } from "@/utils/reservations-utils";
 
 interface ReservationDetailsProps {
   readonly reservation: ReservationWithProducts;
@@ -29,8 +29,11 @@ export function ReservationDetails({ reservation }: ReservationDetailsProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Reservation #{reservation.id}</CardTitle>
-            <Badge variant={getStatusVariant(reservation.status)}>
-              {reservation.status}
+            <Badge
+              variant="outline"
+              className={getStatusClasses(reservation.status)}
+            >
+              {getStatusLabel(reservation.status)}
             </Badge>
           </div>
         </CardHeader>

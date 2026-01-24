@@ -1,109 +1,220 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+# Stock Management System
 
-<p align="center">
- The fastest way to build apps with Next.js and Supabase
-</p>
+A product reservation management system built with Next.js 16 and Supabase. This application allows users to create product reservations and managers to approve, reject, or complete them.
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
-</p>
-<br/>
+## Tech Stack
 
-## Features
+- **Framework**: Next.js 16 (App Router, React 19)
+- **Database/Auth**: Supabase with cookie-based authentication via `@supabase/ssr`
+- **UI**: Tailwind CSS + shadcn/ui (new-york style) + Lucide icons
+- **Forms**: react-hook-form + zod validation
+- **Charts**: Recharts
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Proxy
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Password-based authentication block installed via the [Supabase UI Library](https://supabase.com/ui/docs/nextjs/password-based-auth)
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+## Prerequisites
 
-## Demo
+- Node.js 18.x or higher
+- npm, yarn, or pnpm
+- A Supabase account and project
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+## Installation
 
-## Deploy to Vercel
+### 1. Clone the repository
 
-Vercel deployment will guide you through creating a Supabase account and project.
+```bash
+git clone <repository-url>
+cd stock
+```
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+### 2. Install dependencies
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+```bash
+npm install
+```
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
+### 3. Configure environment variables
 
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
+Copy the example environment file:
 
-## Clone and run locally
+```bash
+cp .env.example .env.local
+```
 
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
+Edit `.env.local` and add your Supabase credentials:
 
-2. Create a Next.js app using the Supabase Starter template npx command
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-or-anon-key
+```
 
-   ```bash
-   npx create-next-app --example with-supabase with-supabase-app
-   ```
+You can find these values in your [Supabase project settings](https://supabase.com/dashboard/project/_/settings/api):
+- **Project URL**: Found under "Project URL"
+- **Publishable Key**: Found under "Project API keys" (use the `anon` / `public` key)
 
-   ```bash
-   yarn create next-app --example with-supabase with-supabase-app
-   ```
+## Database Setup
 
-   ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
-   ```
+Run the following SQL scripts in your Supabase SQL Editor in this exact order:
 
-3. Use `cd` to change into the app's directory
+### Step 1: Create user tables and roles
 
-   ```bash
-   cd with-supabase-app
-   ```
+Run the contents of `database/create_users_tables.sql`:
+- Creates user roles (`reservation_manager`, `reservation_requester`)
+- Creates functions to assign roles to users
+- Creates the `users` table
+- Inserts default test users
 
-4. Rename `.env.example` to `.env.local` and update the following:
+### Step 2: Create reservation tables
 
-  ```env
-  NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=[INSERT SUPABASE PROJECT API PUBLISHABLE OR ANON KEY]
-  ```
-  > [!NOTE]
-  > This example uses `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, which refers to Supabase's new **publishable** key format.
-  > Both legacy **anon** keys and new **publishable** keys can be used with this variable name during the transition period. Supabase's dashboard may show `NEXT_PUBLIC_SUPABASE_ANON_KEY`; its value can be used in this example.
-  > See the [full announcement](https://github.com/orgs/supabase/discussions/29260) for more information.
+Run the contents of `database/create_reservation_tables.sql`:
+- Creates the `products` table
+- Creates the `reservations` table
+- Creates the `reservations_products` junction table
+- Sets up indexes and row-level security policies
 
-  Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` can be found in [your Supabase project's API settings](https://supabase.com/dashboard/project/_?showConnect=true)
+### Step 3: Seed products data
 
-5. You can now run the Next.js local development server:
+Run the contents of `database/seed_products.sql`:
+- Populates the products table with 41 office supply items
 
-   ```bash
-   npm run dev
-   ```
+### Step 4 (Optional): Seed reservations data
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+Run the contents of `database/seed_reservations.sql`:
+- Creates sample reservation data for the last 6 months
+- Useful for testing the dashboard charts and statistics
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+## Creating Users
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+### 1. Create authentication users
 
-## Feedback and issues
+First, create users through Supabase Authentication:
+- Go to your Supabase Dashboard > Authentication > Users
+- Click "Add user" and create users with email/password
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
+### 2. Assign roles to users
 
-## More Supabase examples
+After creating auth users, assign their roles by running in the SQL Editor:
 
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+```sql
+-- Make a user a reservation manager
+SELECT public.make_user_reservation_manager('manager@mail.com');
+
+-- Make a user a reservation requester
+SELECT public.make_user_reservation_requester('requester@mail.com');
+```
+
+### 3. Create corresponding entries in users table
+
+Make sure each auth user has a matching entry in the `public.users` table:
+
+```sql
+INSERT INTO "public"."users" ("email", "name", "role", "userId")
+VALUES ('your-email@example.com', 'Your Name', 'reservation_requester', 'auth-user-uuid');
+```
+
+The `userId` should match the UUID from `auth.users`.
+
+### Default Test Users
+
+The setup scripts create two test users:
+- **manager@mail.com** - Role: `reservation_manager`
+- **requester@mail.com** - Role: `reservation_requester`
+
+## Running the Application
+
+### Development
+
+```bash
+npm run dev
+```
+
+The application will be available at [http://localhost:3000](http://localhost:3000).
+
+### Production
+
+```bash
+npm run build
+npm run start
+```
+
+### Linting
+
+```bash
+npm run lint
+```
+
+## Project Structure
+
+```
+app/
+├── (protected)/           # Routes requiring authentication
+│   ├── layout.tsx        # Sidebar layout with auth check
+│   ├── dashboard/        # Dashboard with charts and statistics
+│   ├── new-reservation/  # Create new reservations
+│   └── reservations/     # View and manage reservations
+├── login/                # Login page
+└── layout.tsx            # Root layout with ThemeProvider
+
+components/
+├── ui/                   # shadcn/ui components
+├── hooks/use-user.ts     # Client-side auth hook
+└── app-sidebar.tsx       # Main navigation sidebar
+
+lib/supabase/
+├── server.ts             # Server-side Supabase client
+├── client.ts             # Browser-side Supabase client
+└── supabase.d.ts         # Generated database types
+
+database/                 # SQL setup scripts
+├── create_users_tables.sql
+├── create_reservation_tables.sql
+├── seed_products.sql
+└── seed_reservations.sql
+
+interfaces/               # TypeScript interfaces
+repository/               # Data access layer
+utils/                    # Utility functions
+```
+
+## Database Schema
+
+### Tables
+
+| Table | Description |
+|-------|-------------|
+| `users` | Application users with roles |
+| `products` | Product inventory |
+| `reservations` | Reservation requests |
+| `reservations_products` | Junction table linking reservations to products |
+
+### User Roles
+
+| Role | Permissions |
+|------|-------------|
+| `reservation_requester` | Can create and view their own reservations |
+| `reservation_manager` | Can approve, reject, and complete reservations |
+
+### Reservation Statuses
+
+| Status | Description |
+|--------|-------------|
+| `pending` | Newly created, awaiting manager review |
+| `available` | Approved by manager, ready for pickup |
+| `rejected` | Rejected by manager |
+| `completed` | Delivered/picked up |
+
+## Troubleshooting
+
+### "Invalid API key" error
+- Verify your `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in `.env.local`
+- Make sure there are no trailing spaces or quotes around the values
+
+### Database connection issues
+- Ensure your Supabase project is active (not paused)
+- Check that Row Level Security policies are properly configured
+
+### Authentication not working
+- Make sure the user exists in both `auth.users` and `public.users`
+- Verify the user's role is correctly set
+
+## License
+
+MIT

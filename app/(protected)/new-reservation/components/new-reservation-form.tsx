@@ -81,6 +81,7 @@ export function NewReservationForm({
         })),
       });
       toast.success("Reservation created successfully");
+      setSelectedProducts([]);
       router.push("/reservations");
     } catch (error) {
       toast.error(

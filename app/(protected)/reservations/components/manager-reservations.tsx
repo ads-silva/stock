@@ -30,6 +30,7 @@ import {
   deliverReservation,
   ReservationWithItemCount,
 } from "@/repository/reservation-repository";
+import { getStatusClasses, getStatusLabel } from "@/utils/reservations-utils";
 
 type TabStatus = "pending" | "available" | "rejected" | "completed";
 
@@ -181,7 +182,7 @@ export default function ManagerReservations() {
       <TableRow key={reservation.id}>
         <TableCell className="font-medium">{reservation.id}</TableCell>
         <TableCell>{reservation.requesterUser?.name || "-"}</TableCell>
-        <TableCell className="text-right">{reservation.totalQuantity}</TableCell>
+        <TableCell className="text-right">{reservation.itemsCount}</TableCell>
         <TableCell>
           {new Date(reservation.createdAt).toLocaleDateString()}
         </TableCell>
@@ -210,23 +211,23 @@ export default function ManagerReservations() {
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList>
           <TabsTrigger value="pending">
-            <Badge variant="secondary" className="mr-1">
-              Pending
+            <Badge variant="outline" className={`mr-1 ${getStatusClasses("pending")}`}>
+              {getStatusLabel("pending")}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="available">
-            <Badge variant="default" className="mr-1">
-              Available
+            <Badge variant="outline" className={`mr-1 ${getStatusClasses("available")}`}>
+              {getStatusLabel("available")}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="rejected">
-            <Badge variant="destructive" className="mr-1">
-              Rejected
+            <Badge variant="outline" className={`mr-1 ${getStatusClasses("rejected")}`}>
+              {getStatusLabel("rejected")}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="completed">
-            <Badge variant="default" className="mr-1">
-              Completed
+            <Badge variant="outline" className={`mr-1 ${getStatusClasses("completed")}`}>
+              {getStatusLabel("completed")}
             </Badge>
           </TabsTrigger>
         </TabsList>
