@@ -1,6 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -10,14 +13,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Reservation } from "@/interfaces/reservation";
-import { getReservationsByRequesterUserId } from "@/repository/reservation-repository";
+import {
+  getReservationsByRequesterUserId,
+  ReservationWithItemCount,
+} from "@/repository/reservation-repository";
 import { getCurrentUser } from "@/repository/users-repository";
 import { getStatusVariant } from "@/utils/reservations-utils";
-import { useEffect, useState } from "react";
 
 export default function RequesterReservations() {
-  const [reservations, setReservations] = useState<Reservation[]>([]);
+  const router = useRouter();
+  const [reservations, setReservations] = useState<ReservationWithItemCount[]>(
+    []
+  );
 
   useEffect(() => {
     const fetchReservations = async () => {
@@ -35,21 +42,22 @@ export default function RequesterReservations() {
 
   return (
     <Table>
-      <TableCaption>A list of all reservations.</TableCaption>
+      <TableCaption>A list of your reservations.</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">ID</TableHead>
           <TableHead>Status</TableHead>
-          <TableHead>Requested By</TableHead>
+          <TableHead className="text-right">Items</TableHead>
           <TableHead>Manager</TableHead>
           <TableHead>Created At</TableHead>
+          <TableHead className="w-[100px]"></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {reservations.length === 0 ? (
           <TableRow>
             <TableCell
-              colSpan={7}
+              colSpan={6}
               className="text-center text-muted-foreground"
             >
               No reservations found.
@@ -64,10 +72,21 @@ export default function RequesterReservations() {
                   {reservation.status}
                 </Badge>
               </TableCell>
-              <TableCell>{reservation.requesterUser.name}</TableCell>
+              <TableCell className="text-right">
+                {reservation.totalQuantity}
+              </TableCell>
               <TableCell>{reservation.managerUser?.name || "-"}</TableCell>
               <TableCell>
                 {new Date(reservation.createdAt).toLocaleDateString()}
+              </TableCell>
+              <TableCell>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => router.push(`/reservations/${reservation.id}`)}
+                >
+                  Details
+                </Button>
               </TableCell>
             </TableRow>
           ))

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "sonner";
 import "./globals.css";
 import { Suspense } from "react";
 
@@ -35,6 +36,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <Suspense>{children}</Suspense>
+          <Toaster richColors position="top-right" />
         </ThemeProvider>
       </body>
     </html>

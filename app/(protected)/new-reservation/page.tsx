@@ -1,7 +1,15 @@
 import { createClient } from "@/lib/supabase/server";
+import { isRequester } from "@/repository/users-repository";
+import { redirect } from "next/navigation";
 import { NewReservationForm } from "./components/new-reservation-form";
 
 export default async function NewReservationPage() {
+  // Only requesters can access this page
+  const userIsRequester = await isRequester();
+  if (!userIsRequester) {
+    redirect("/reservations");
+  }
+
   const supabase = await createClient();
 
   // Get current authenticated user
@@ -9,13 +17,8 @@ export default async function NewReservationPage() {
     data: { user: authUser },
   } = await supabase.auth.getUser();
 
-  if (!authUser) {
-    return (
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <h1 className="text-2xl font-bold">New Reservation</h1>
-        <p>Please log in to create a reservation.</p>
-      </div>
-    );
+  if (!authUser?.email) {
+    redirect("/login");
   }
 
   // Get user details from users table
@@ -25,7 +28,7 @@ export default async function NewReservationPage() {
     .eq("email", authUser.email)
     .single();
 
-  const requesterName = userData?.name;
+  const requesterName = userData?.name ?? "";
 
   // Format current date and time
   const currentDateTime = new Date().toLocaleString("en-US", {

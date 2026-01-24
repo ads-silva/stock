@@ -1,7 +1,10 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Product } from "@/interfaces/product";
+import { createReservation } from "@/repository/reservation-repository";
 import { AddProductModal } from "./add-product-modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,7 +36,9 @@ export function NewReservationForm({
   requesterName,
   currentDateTime,
 }: NewReservationFormProps) {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [selectedProducts, setSelectedProducts] = React.useState<
     SelectedProduct[]
   >([]);
@@ -64,17 +69,26 @@ export function NewReservationForm({
     );
   };
 
-  const handleSendRequest = () => {
-    const requestData = {
-      requesterName,
-      currentDateTime,
-      products: selectedProducts.map((item) => ({
-        productId: item.product.id,
-        productName: item.product.name,
-        quantity: item.quantity,
-      })),
-    };
-    console.log("Sending reservation request:", requestData);
+  const handleSendRequest = async () => {
+    if (selectedProducts.length === 0) return;
+
+    setIsLoading(true);
+    try {
+      await createReservation({
+        items: selectedProducts.map((item) => ({
+          productId: item.product.id,
+          amount: item.quantity,
+        })),
+      });
+      toast.success("Reservation created successfully");
+      router.push("/reservations");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to create reservation"
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const selectedProductIds = selectedProducts.map((item) =>
@@ -162,10 +176,10 @@ export function NewReservationForm({
       <div className="flex justify-end">
         <Button
           onClick={handleSendRequest}
-          disabled={selectedProducts.length === 0}
+          disabled={selectedProducts.length === 0 || isLoading}
           type="button"
         >
-          Save
+          {isLoading ? "Saving..." : "Save"}
         </Button>
       </div>
 
